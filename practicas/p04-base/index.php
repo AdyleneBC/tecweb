@@ -59,8 +59,7 @@
     echo '<h4>Respuesta:</h4>';
     echo '<p>Las variables $a, $b y $c comparten una referencia, por lo tanto, al cambiar $a, también cambian $b y $c.</p>';
 
-    //Liberamos espacio
-    unset($a, $b, $c);
+
     ?>
 
     <h2>Ejercicio 3</h2>
@@ -83,6 +82,51 @@
     echo "<p>\$z = ";
     print_r($z);
     echo "</p>";
+    ?>
+
+    <h2>Ejercicio 4</h2>
+    <?php
+    unset($a, $b, $c, $z);
+    $a = "PHP5";
+    $z[] = &$a;
+    $b = "5a version de PHP";
+    @$c = $b * 10;
+
+    echo "<p>\$a = " . var_export($GLOBALS['a'], true) . "</p>";
+    echo "<p>\$b = " . var_export($GLOBALS['b'], true) . "</p>";
+    echo "<p>\$c = " . var_export($GLOBALS['c'], true) . "</p>";
+    ?>
+
+    <h2>Ejercicio 5</h2>
+    <?php
+    $a = "7 personas";
+    $b = (int) $a;
+    $a = "9E3";
+    $c = (float) $a;
+
+    echo "<p>\$a = " . htmlspecialchars($a) . "</p>";
+    echo "<p>\$b = " . htmlspecialchars($b) . "</p>";
+    echo "<p>\$c = " . htmlspecialchars($c) . "</p>";
+    ?>
+
+    <h2>Ejercicio 6</h2>
+    <?php
+    $a = "0";
+    $b = "TRUE";
+    $c = FALSE;
+    $d = ($a or $b);
+    $e = ($a and $c);
+    $f = ($a xor $b);
+
+    echo "<pre>";
+    var_dump($a, $b, $c, $d, $e, $f);
+    echo "</pre>";
+
+    // Convertir booleano a string legible
+    echo "c como texto: " . var_export($c, true) . "<br>";
+    echo "e como texto: " . var_export($e, true) . "<br>";
+
+    unset($a, $b, $c, $d, $e, $f);
     ?>
 </body>
 
