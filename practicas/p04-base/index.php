@@ -59,6 +59,30 @@
     echo '<h4>Respuesta:</h4>';
     echo '<p>Las variables $a, $b y $c comparten una referencia, por lo tanto, al cambiar $a, también cambian $b y $c.</p>';
 
+    //Liberamos espacio
+    unset($a, $b, $c);
+    ?>
+
+    <h2>Ejercicio 3</h2>
+    <p>Muestra el contenido de cada variable inmediatamente después de cada asignación,
+        verificar la evolución del tipo de estas variables (imprime todos los componentes de los
+        arreglo):</p>
+
+    <?php
+    $a = "PHP5";
+    $z[] = &$a;
+    $b = "5a version de PHP";
+    @$c = $b * 10;
+    $a .= $b;
+    $b *= $c;
+    $z[0] = "MySQL";
+
+    echo "<p>\$a = " . htmlspecialchars($a) . "</p>";
+    echo "<p>\$b = " . htmlspecialchars($b) . "</p>";
+    echo "<p>\$c = " . htmlspecialchars($c) . "</p>";
+    echo "<p>\$z = ";
+    print_r($z);
+    echo "</p>";
     ?>
 </body>
 
