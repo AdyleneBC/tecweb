@@ -128,6 +128,15 @@
 
     unset($a, $b, $c, $d, $e, $f);
     ?>
+
+    <h2>Ejercicio 7</h2>
+    <ul>
+        <li><strong>Versión de Apache y PHP:</strong> <?php echo htmlspecialchars($_SERVER['SERVER_SOFTWARE']); ?></li>
+        <li><strong>Sistema Operativo del Servidor:</strong> <?php echo htmlspecialchars(php_uname()); ?></li>
+        <li><strong>Idioma del Navegador (Cliente):</strong> <?php echo htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']); ?></li>
+    </ul>
+
+
 </body>
 
 </html>
