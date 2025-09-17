@@ -9,12 +9,12 @@
     <h2>Ejercicio 1</h2>
     <p>Escribir programa para comprobar si un número es un múltiplo de 5 y 7</p>
      <?php
-    require_once __DIR__.'/src/funciones.php';
-        if(isset($_GET['numero']))
-        {
-            funcion1($_GET['numero']) ;
-        }
+        include 'src/funciones.php';
+
+        funcion1();
     ?>
+    
+    <p>Ejercicio 2</p>
 
 </body>
 </html>
