@@ -16,5 +16,23 @@
         }
     }
 
+    /*Funcion para generar una matriz de M*3 y almacenar todas la iteraciones hats llegar a que un numero sea impar, par, impar */
+    /*Vamos a usar un do-while */
+
+    function funcion2 (){
+        do{
+            $val1 = rand();
+            $val2 = rand();
+            $val3 = rand();
+
+            echo $val2;
+
+        }while($val2%2==0);
+        
+
+        
+        
+    }
+
         
     ?>

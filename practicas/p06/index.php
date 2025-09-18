@@ -14,7 +14,12 @@
         funcion1();
     ?>
     
-    <p>Ejercicio 2</p>
+    <h1>Ejercicio 2</h1>
+    <?php
+
+        funcion2();
+    ?>
+
 
 </body>
 </html>
