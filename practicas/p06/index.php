@@ -36,6 +36,23 @@
     ejercicio4();
     ?>
 
+    <h2>Ejercicio 5</h2>
+    <form method="POST" action="">
+        <fieldset>
+            <legend>Llena el formulario</legend><br>
+
+            <label>Edad: </label><input type="number" name="edad" required><br><br>
+
+            <p>Sexo:</p>
+            <input type="radio" name="sexo" value="femenino" required> <label>Femenino</label>
+            <input type="radio" name="sexo" value="masculino"> <label>Masculino</label>
+            <input type="radio" name="sexo" value="otro"> <label>Otro</label>
+            <br><br>
+
+            <input type="submit" value="Enviar">
+        </fieldset>
+    </form>
+
 </body>
 
 </html>

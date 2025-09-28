@@ -124,3 +124,16 @@ function ejercicio4()
 
     echo "</table>";
 }
+
+/*EJERCICIO 5 */
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $edad = $_POST['edad'];
+    $sexo = $_POST['sexo'];
+
+    if ($sexo == "femenino" && $edad >= 18 && $edad <= 35) {
+        echo "<script>window.alert('Bienvenida, usted está en el rango de edad permitido.');</script>";
+    }
+    else {
+       echo "<script>window.alert('Verifique los datos ingresados');</script>";
+    }
+}
