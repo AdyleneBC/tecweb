@@ -51,7 +51,7 @@ function ejercicio2()
     echo "<br>$total números obtenidos en $iteraciones iteraciones\n";
 }
 
-/*EJERCICIO 3 */
+/*EJERCICIO 3 usando while*/
 function ejercicio3_while()
 {
 
@@ -80,6 +80,7 @@ function ejercicio3_while()
     }
 }
 
+/*Ejercicio3 usando do while */
 function ejercicio3_do_while()
 {
     if (isset($_GET['num'])) {

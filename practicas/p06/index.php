@@ -24,8 +24,10 @@
 
     <h2>Ejercicio 3</h2>
     <?php
+    echo "<p><b>Ejercicio 3 usando while</b></p>";
     ejercicio3_while();
-    "<br>";
+    echo "<br>";
+    echo "<p><b>Ejercicio 3 usando do while</b></p>";
     ejercicio3_do_while();
     ?>
 
