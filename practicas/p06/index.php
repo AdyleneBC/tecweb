@@ -31,6 +31,11 @@
     ejercicio3_do_while();
     ?>
 
+    <h2>Ejercicio 4</h2>
+    <?php
+    ejercicio4();
+    ?>
+
 </body>
 
 </html>

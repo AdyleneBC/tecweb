@@ -64,7 +64,7 @@ function ejercicio3_while()
             exit;
         }
 
-        $numero = rand(1, 100); 
+        $numero = rand(1, 100);
 
         // Ciclo while
         while ($numero % $divisor != 0) {
@@ -74,7 +74,6 @@ function ejercicio3_while()
 
         echo "<br><b>Encontrado:</b> $numero es múltiplo de $divisor";
         echo "<br><br>";
-
     } else {
         echo "Comprueba tu entrada";
     }
@@ -93,7 +92,7 @@ function ejercicio3_do_while()
 
         do {
             $numero = rand(1, 100);
-            
+
             echo "$numero generado<br>";
         } while ($numero % $divisor != 0);
 
@@ -101,4 +100,27 @@ function ejercicio3_do_while()
     } else {
         echo "Comprueba el número que ingresas";
     }
+}
+
+/*EJERCICIO 4 */
+
+function ejercicio4()
+{
+    $arreglo = [];
+    for ($i = 97; $i <= 122; $i++) {
+        $arreglo[$i] = chr($i);
+    }
+
+    //Tabla en XHTML con echo
+    echo "<table border='1' cellpadding='20'>";
+    echo "<tr><th>Índice</th><th>Valor</th></tr>";
+
+    foreach ($arreglo as $key => $value) {
+        echo "<tr>";
+        echo "<td>$key</td>";
+        echo "<td>$value</td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";
 }
