@@ -21,13 +21,16 @@
 
 
 
-  <form method="post" action="http://localhost/mike/consurso.php">
+  <form method="post" action="http://52.43.117.247/neo/classroom/tw/concurso.php">
     <p>Información del Participante</p>
     <ul>
-      <li>Nombre:</li>
-      <li>Dirección de E-mail:</li>
-      <li>Número Telefónico:</li>
-      <li>Mis tenis son tan feos porque...</li>
+      <li>Nombre:<input type="text" name="name"></li>
+      <li>Dirección de E-mail:<input type="email" name="email"></li>
+      <li>Número Telefónico:<input type="tel" name="phone"></li>
+      <li>Mis tenis son tan feos porque...<br>
+          <textarea name="story" rows="4" cols="60" maxlength="300"
+            placeholder="No más de 300 caracteres de longitud"></textarea>
+        </li>
     </ul>
 
     <h2>Diseña tus Mike personalizados:</h2>
@@ -52,7 +55,9 @@
 
     <p>Talla</p>
     <p>Las medidas reflejan el estándar masculino:</p>
-
+     
+    <p><input type="submit" value="¡Chidos mis Tenis!">
+    <input type="reset" value="Limpiar"></p>
   </form>
 </body>
 
