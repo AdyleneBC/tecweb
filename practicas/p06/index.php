@@ -53,6 +53,43 @@
         </fieldset>
     </form>
 
+     <h2>Ejercicio 6</h2>
+    <form method="post" action="">
+        <label>Buscar por matrícula:
+            <input type="text" name="matricula" placeholder="LLLNNNN">
+        </label>
+        <br>
+        <input type="submit" name="buscar" value="Buscar">
+        <input type="submit" name="todos" value="Ver todos">
+    </form>
+
+    <?php
+    if (isset($_POST['buscar']) && !empty($_POST['matricula'])) {
+        $matricula = strtoupper(trim($_POST['matricula']));
+        $autos = matriculas();
+
+        if (isset($autos[$matricula])) {
+            echo "<p>Matrícula $matricula, econtrada con éxito :)</p><br>";
+            echo "<pre>";
+            print_r([$matricula => $autos[$matricula]]);
+            echo "</pre>";
+        } else {
+            echo "<p>No se encontró la matrícula $matricula.</p>";
+        }
+    }
+    else{
+        echo "<p>Ingresa un dato correcto :( </p><br>";
+    }
+
+    if (isset($_POST['todos'])) {
+        $autos = matriculas();
+        echo "<pre>";
+        print_r($autos);
+        echo "</pre>";
+    }
+    ?>
+
+
 </body>
 
 </html>

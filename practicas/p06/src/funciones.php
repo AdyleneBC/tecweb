@@ -132,8 +132,195 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($sexo == "femenino" && $edad >= 18 && $edad <= 35) {
         echo "<script>window.alert('Bienvenida, usted está en el rango de edad permitido.');</script>";
+    } else {
+        echo "<script>window.alert('Verifique los datos ingresados');</script>";
     }
-    else {
-       echo "<script>window.alert('Verifique los datos ingresados');</script>";
-    }
+}
+
+
+/*EJERCICIO 6 */
+function matriculas()
+{
+    return [
+        "ABC1234" => [
+            "Auto" => [
+                "Marca" => "Mazda",
+                "Modelo" => 2022,
+                "Tipo" => "Sedan"
+            ],
+            "Propietario" => [
+                "Nombre" => "Ricardo Perez",
+                "Ciudad" => "Oaxaca",
+                "Dirección" => "Av. Hidalgo"
+            ]
+        ],
+        "XYZ5664" => [
+            "Auto" => [
+                "Marca" => "Honda",
+                "Modelo" => 2020,
+                "Tipo" => "Hatchback"
+            ],
+            "Propietario" => [
+                "Nombre" => "Silvia Vargas",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Avenida Independencia 222"
+            ]
+        ],
+        "LMN7012" => [
+            "Auto" => [
+                "Marca" => "Ford",
+                "Modelo" => 2019,
+                "Tipo" => "Camioneta"
+            ],
+            "Propietario" => [
+                "Nombre" => "Roberto Castillo",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle de los Libres 333"
+            ]
+        ],
+        "DEF3456" => [
+            "Auto" => [
+                "Marca" => "Chevrolet",
+                "Modelo" => 2021,
+                "Tipo" => "Sedan"
+            ],
+            "Propietario" => [
+                "Nombre" => "Fernanda López",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle García Vigil 444"
+            ]
+        ],
+        "GHI6789" => [
+            "Auto" => [
+                "Marca" => "Nissan",
+                "Modelo" => 2018,
+                "Tipo" => "Hatchback"
+            ],
+            "Propietario" => [
+                "Nombre" => "Emilio Ramos",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Manuel Doblado 555"
+            ]
+        ],
+        "JKL1122" => [
+            "Auto" => [
+                "Marca" => "Mazda",
+                "Modelo" => 2022,
+                "Tipo" => "Camioneta"
+            ],
+            "Propietario" => [
+                "Nombre" => "Carla Méndez",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle de la Constitución 666"
+            ]
+        ],
+        "MNO3344" => [
+            "Auto" => [
+                "Marca" => "Volkswagen",
+                "Modelo" => 2017,
+                "Tipo" => "Sedan"
+            ],
+            "Propietario" => [
+                "Nombre" => "Javier Ortega",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle 20 de Noviembre 777"
+            ]
+        ],
+        "PQR5566" => [
+            "Auto" => [
+                "Marca" => "Hyundai",
+                "Modelo" => 2020,
+                "Tipo" => "Hatchback"
+            ],
+            "Propietario" => [
+                "Nombre" => "Adriana Guzmán",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Las Casas 888"
+            ]
+        ],
+        "STU7788" => [
+            "Auto" => [
+                "Marca" => "Kia",
+                "Modelo" => 2021,
+                "Tipo" => "Camioneta"
+            ],
+            "Propietario" => [
+                "Nombre" => "Gerardo Sánchez",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Mina 999"
+            ]
+        ],
+        "VWX9900" => [
+            "Auto" => [
+                "Marca" => "Jeep",
+                "Modelo" => 2016,
+                "Tipo" => "Camioneta"
+            ],
+            "Propietario" => [
+                "Nombre" => "Margarita Flores",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Porfirio Díaz 1010"
+            ]
+        ],
+        "YZA2233" => [
+            "Auto" => [
+                "Marca" => "Mercedes-Benz",
+                "Modelo" => 2023,
+                "Tipo" => "Sedan"
+            ],
+            "Propietario" => [
+                "Nombre" => "Oscar Navarro",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Reforma 1111"
+            ]
+        ],
+        "BCD4455" => [
+            "Auto" => [
+                "Marca" => "BMW",
+                "Modelo" => 2022,
+                "Tipo" => "Hatchback"
+            ],
+            "Propietario" => [
+                "Nombre" => "Daniela Pineda",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Crespo 1212"
+            ]
+        ],
+        "EFG6677" => [
+            "Auto" => [
+                "Marca" => "Audi",
+                "Modelo" => 2020,
+                "Tipo" => "Sedan"
+            ],
+            "Propietario" => [
+                "Nombre" => "Raúl Velázquez",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Morelos 1313"
+            ]
+        ],
+        "HIJ8899" => [
+            "Auto" => [
+                "Marca" => "Tesla",
+                "Modelo" => 2021,
+                "Tipo" => "Sedan"
+            ],
+            "Propietario" => [
+                "Nombre" => "Andrea Córdova",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Vicente Guerrero 1414"
+            ]
+        ],
+        "KLM1123" => [
+            "Auto" => [
+                "Marca" => "Subaru",
+                "Modelo" => 2019,
+                "Tipo" => "Camioneta"
+            ],
+            "Propietario" => [
+                "Nombre" => "Luis Moreno",
+                "Ciudad" => "Oaxaca de Juárez",
+                "Dirección" => "Calle Hidalgo 1515"
+            ]
+        ]
+    ];
 }
