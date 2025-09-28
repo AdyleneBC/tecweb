@@ -17,11 +17,17 @@
     funcion1();
     ?>
 
-    <h1>Ejercicio 2</h1>
+    <h2>Ejercicio 2</h2>
     <?php
     ejercicio2();
     ?>
 
+    <h2>Ejercicio 3</h2>
+    <?php
+    ejercicio3_while();
+    "<br>";
+    ejercicio3_do_while();
+    ?>
 
 </body>
 

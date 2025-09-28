@@ -18,14 +18,15 @@ function funcion1()
 /*Vamos a usar un do-while */
 
 /*EJERCICIO 2 */
-function ejercicio2() {
+function ejercicio2()
+{
     $matriz = [];   // Guardará los números en formato Mx3
     $iteraciones = 0;
     $secuencia = false;
 
     while (!$secuencia) {
         $fila = [];
-        // Generamos 3 números aleatorios
+        // Generamos los 3 números aleatorios
         for ($i = 0; $i < 3; $i++) {
             $fila[] = rand(1, 999);
         }
@@ -41,14 +42,62 @@ function ejercicio2() {
     }
 
     // Imprimimos la matriz con comas
-foreach ($matriz as $fila) {
-    echo implode(", ", $fila) . "<br>";
-}
+    foreach ($matriz as $fila) {
+        echo implode(", ", $fila) . "<br>";
+    }
 
 
     $total = $iteraciones * 3;
     echo "<br>$total números obtenidos en $iteraciones iteraciones\n";
 }
 
+/*EJERCICIO 3 */
+function ejercicio3_while()
+{
 
-?>
+
+    if (isset($_GET['num'])) {
+        $divisor = (int) $_GET['num'];
+
+        if ($divisor <= 0) {
+            echo "El número debe ser mayor a 0 (cero)";
+            exit;
+        }
+
+        $numero = rand(1, 100); 
+
+        // Ciclo while
+        while ($numero % $divisor != 0) {
+            echo "$numero no es múltiplo de $divisor<br>";
+            $numero = rand(1, 100);
+        }
+
+        echo "<br><b>Encontrado:</b> $numero es múltiplo de $divisor";
+        echo "<br><br>";
+
+    } else {
+        echo "Comprueba tu entrada";
+    }
+}
+
+function ejercicio3_do_while()
+{
+    if (isset($_GET['num'])) {
+        $divisor = (int) $_GET['num'];
+
+        if ($divisor <= 0) {
+            echo "El número debe ser mayor a 0 (cero)";
+            exit;
+        }
+
+        do {
+            $numero = rand(1, 100);
+            
+            echo "$numero generado<br>";
+        } while ($numero % $divisor != 0);
+
+        echo "<br><b>Encontrado:</b> $numero es múltiplo de $divisor";
+    } else {
+        echo "Comprueba el número que ingresas";
+    }
+}
