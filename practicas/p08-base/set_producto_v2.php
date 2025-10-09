@@ -31,13 +31,13 @@ if ($resultado) {
     list($total) = mysqli_fetch_row($resultado);
 
     if ((int)$total > 0) {
-        /* Ya existe -> NO insertar, mensaje de error */
+        /* mensaje de error por existencia */
         echo "<p>Error: Ya existe un producto con el mismo nombre, marca y modelo.</p>";
     } else {
         /** 3) Insertar con column list */
         $sql_insertar = "INSERT INTO productos
-            (nombre, marca, modelo, precio, detalles, unidades, imagen)
-            VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}')";
+            (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado)
+            VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}', 0)";
 
         if (mysqli_query($link, $sql_insertar)) {
             $id = $link->insert_id;
