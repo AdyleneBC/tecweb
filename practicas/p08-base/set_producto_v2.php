@@ -1,4 +1,5 @@
 <?php
+
 /** SE CREA EL OBJETO DE CONEXION */
 @$link = new mysqli('localhost', 'admin_tw', 'adylene', 'marketzone');
 
@@ -12,12 +13,12 @@ $link->set_charset('utf8mb4');
 
 
 $nombre = $_POST['nombre'];
-$marca  = $_POST['marca']; 
-$modelo = $_POST['modelo']; 
-$precio = $_POST['precio']; 
-$detalles = $_POST['detalles']; 
-$unidades = $_POST['unidades']; 
-$imagen   = $_POST['imagen']; 
+$marca  = $_POST['marca'];
+$modelo = $_POST['modelo'];
+$precio = $_POST['precio'];
+$detalles = $_POST['detalles'];
+$unidades = $_POST['unidades'];
+$imagen   = $_POST['imagen'];
 
 /** 2) Verificar duplicado (nombre+marca+modelo) */
 $sql_verificar = "SELECT COUNT(*) AS total
@@ -35,9 +36,12 @@ if ($resultado) {
         echo "<p>Error: Ya existe un producto con el mismo nombre, marca y modelo.</p>";
     } else {
         /** 3) Insertar con column list */
-        $sql_insertar = "INSERT INTO productos
-            (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado)
-            VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}', 0)";
+        /*$sql_insertar = "INSERT INTO productos
+VALUES (NULL, '{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}', 0)";*/
+
+ $sql_insertar = "INSERT INTO productos
+            (nombre, marca, modelo, precio, detalles, unidades, imagen)
+            VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}')";
 
         if (mysqli_query($link, $sql_insertar)) {
             $id = $link->insert_id;
@@ -64,7 +68,6 @@ if ($resultado) {
             echo '<li><b>Imagen:</b> '   . htmlspecialchars($imagen)   . '</li>';
             echo '</ul>';
             echo '</body></html>';
-
         } else {
             echo "Error al registrar el producto: " . mysqli_error($link);
         }
@@ -74,4 +77,3 @@ if ($resultado) {
 }
 
 $link->close();
-?>
