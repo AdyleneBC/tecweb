@@ -35,9 +35,9 @@
 
     <h2>Ejercicio 2</h2>
     <p>Proporcionar los valores de $a, $b, $c como sigue:</p>
-    <p>$a = “ManejadorSQL”;</p>
-    <p>$b = 'MySQL’;</p>
-    <p>$c = &$a;</p>
+    <p>$a = "ManejadorSQL" ;</p>
+    <p>$b = 'MySQL';</p>
+    <p>$c = &amp; $a;</p>
 
     <?php
 
@@ -135,6 +135,11 @@
         <li><strong>Sistema Operativo del Servidor:</strong> <?php echo htmlspecialchars(php_uname()); ?></li>
         <li><strong>Idioma del Navegador (Cliente):</strong> <?php echo htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']); ?></li>
     </ul>
+
+    <p>
+        <a href="https://validator.w3.org/check?uri=referer"><img
+                src="https://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1" height="31" width="88" /></a>
+    </p>
 
 
 </body>
