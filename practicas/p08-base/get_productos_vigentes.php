@@ -12,7 +12,7 @@
     $link->set_charset('utf8mb4');
 
     /** SOLO productos vigentes */
-    $sql = "SELECT * FROM productos WHERE eliminado = 1";
+    $sql = "SELECT * FROM productos WHERE eliminado = 0";
 
     if ($result = $link->query($sql)) {
         $row = $result->fetch_all(MYSQLI_ASSOC);
@@ -49,6 +49,7 @@
                     <th scope="col">Unidades</th>
                     <th scope="col">Detalles</th>
                     <th scope="col">Imagen</th>
+                    <th scope="col">Eliminado</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,6 +63,7 @@
                     <td><?= htmlspecialchars($value['unidades']) ?></td>
                     <td><?= htmlspecialchars($value['detalles']) ?></td>
                     <td><img src="<?= htmlspecialchars($value['imagen']) ?>" alt="" style="max-height:80px"></td>
+                    <td><?= htmlspecialchars($value['eliminado']) ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
