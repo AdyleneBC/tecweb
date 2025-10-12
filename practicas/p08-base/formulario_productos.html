@@ -59,32 +59,12 @@
                 alert("El nombre es requerido.");
                 return;
             }
-            if (nombre.length > 100) {
-                alert("El nombre tener 100 o menos caracteres.")
-                return;
-            }
             if (!marca) {
                 alert("La marca es requerida.");
                 return;
             }
-            if (!modelo.match(/^[A-Za-z0-9]+$/)) {
-                alert("El modelo debe ser alfanumérico.");
-                return;
-            }
-            if (modelo.length > 25) {
-                alert("El modelo debe tener 25 caracteres o menos.");
-                return;
-            }
             if (!precio) {
                 alert("El precio es requerido.");
-                return;
-            }
-            if (precio < 100) {
-                alert("El precio debe ser mayor a 99.99.");
-                return;
-            }
-            if (detalles.length > 250) {
-                alert("Los detalles no pueden exceder los 250 caracteres.");
                 return;
             }
             if (!unidades) {
