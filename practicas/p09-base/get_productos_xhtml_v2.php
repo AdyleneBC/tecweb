@@ -1,24 +1,22 @@
 <?php
-// Enviar encabezado correcto para XHTML
 header("Content-Type: application/xhtml+xml; charset=UTF-8");
 
-// Verificar si se recibió el parámetro "tope"
 if (!isset($_GET['tope'])) {
-    die('<p style="color: red; text-align: center;">Parámetro "tope" no detectado...</p>');
+    die('<p style="color: red; text-align: center;">Verifique que el parametro tope sea correcto</p>');
 }
 
-$tope = intval($_GET['tope']); // Convertir a entero para evitar SQL Injection
+$tope = intval($_GET['tope']); 
 $productos = [];
 
-// Conectar a la base de datos
+/** SE CREA EL OBJETO DE CONEXION */
 @$link = new mysqli('localhost', 'admin_tw', 'adylene', 'marketzone');
 
-// Comprobar conexión
+/** comprobar la conexión */
 if ($link->connect_errno) {
     die('<p style="color: red; text-align: center;">Error en la conexión: ' . htmlspecialchars($link->connect_error) . '</p>');
 }
 
-// Ejecutar consulta
+/** Crear consulta */
 if ($result = $link->query("SELECT * FROM productos WHERE unidades <= $tope")) {
     $productos = $result->fetch_all(MYSQLI_ASSOC);
     $result->free();
@@ -37,10 +35,9 @@ $link->close();
         crossorigin="anonymous" />
     <script>
         function show() {
-            // se obtiene el id de la fila donde está el botón presionado
             var rowId = event.target.parentNode.parentNode.id;
 
-            // se obtienen los datos de la fila en forma de arreglo
+            
             var data = document.getElementById(rowId).querySelectorAll(".row-data");
 
             var id = data[0].innerHTML;
@@ -58,11 +55,11 @@ $link->close();
     </script>
 </head>
 <body>
-    <h3 style="text-align: center;">Productos</h3>
+    <h3 style="text-align: center;">Tabla de Productos (Sneakers)</h3>
     <br />
 
     <?php if (count($productos) > 0): ?>
-        <table class="table table-bordered" style="width: 90%; margin: auto;">
+        <table class="table">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
@@ -106,66 +103,66 @@ $link->close();
             </tbody>
         </table>
     <?php else: ?>
-        <p style="color: red; text-align: center;">No hay productos con unidades menores o iguales a <?= $tope ?>.</p>
+        <p style="color: red; text-align: center;"> No hay productos vigentes para mostrar con el tope: <?= $tope ?>.</p>
     <?php endif; ?>
 
     <script>
         function send2form(id, nombre, marca, modelo, precio, unidades, detalles, imagen, eliminado) {
             var form = document.createElement("form");
 
-            var idIn = document.createElement("input");
-            idIn.type = 'hidden';
-            idIn.name = 'id';
-            idIn.value = id;
-            form.appendChild(idIn);
+            var propId = document.createElement("input");
+            propId.type = 'hidden';
+            propId.name = 'id';
+            propId.value = id;
+            form.appendChild(propId);
 
-            var nombreIn = document.createElement("input");
-            nombreIn.type = 'hidden';
-            nombreIn.name = 'nombre';
-            nombreIn.value = nombre;
-            form.appendChild(nombreIn);
+            var propNombre = document.createElement("input");
+            propNombre.type = 'hidden';
+            propNombre.name = 'nombre';
+            propNombre.value = nombre;
+            form.appendChild(propNombre);
 
-            var marcaIn = document.createElement("input");
-            marcaIn.type = 'hidden';
-            marcaIn.name = 'marca';
-            marcaIn.value = marca;
-            form.appendChild(marcaIn);
+            var propMarca = document.createElement("input");
+            propMarca.type = 'hidden';
+            propMarca.name = 'marca';
+            propMarca.value = marca;
+            form.appendChild(propMarca);
 
-            var modeloIn = document.createElement("input");
-            modeloIn.type = 'hidden';
-            modeloIn.name = 'modelo';
-            modeloIn.value = modelo;
-            form.appendChild(modeloIn);
+            var propModelo = document.createElement("input");
+            propModelo.type = 'hidden';
+            propModelo.name = 'modelo';
+            propModelo.value = modelo;
+            form.appendChild(propModelo);
 
-            var precioIn = document.createElement("input");
-            precioIn.type = 'hidden';
-            precioIn.name = 'precio';
-            precioIn.value = precio;
-            form.appendChild(precioIn);
+            var propPrecio = document.createElement("input");
+            propPrecio.type = 'hidden';
+            propPrecio.name = 'precio';
+            propPrecio.value = precio;
+            form.appendChild(propPrecio);
 
-            var unidadesIn = document.createElement("input");
-            unidadesIn.type = 'hidden';
-            unidadesIn.name = 'unidades';
-            unidadesIn.value = unidades;
-            form.appendChild(unidadesIn);
+            var propUnidades = document.createElement("input");
+            propUnidades.type = 'hidden';
+            propUnidades.name = 'unidades';
+            propUnidades.value = unidades;
+            form.appendChild(propUnidades);
 
-            var detallesIn = document.createElement("input");
-            detallesIn.type = 'hidden';
-            detallesIn.name = 'detalles';
-            detallesIn.value = detalles;
-            form.appendChild(detallesIn);
+            var propDetalles = document.createElement("input");
+            propDetalles.type = 'hidden';
+            propDetalles.name = 'detalles';
+            propDetalles.value = detalles;
+            form.appendChild(propDetalles);
 
-            var imagenIn = document.createElement("input");
-            imagenIn.type = 'hidden';
-            imagenIn.name = 'imagen';
-            imagenIn.value = imagen;
-            form.appendChild(imagenIn);
+            var propImagen = document.createElement("input");
+            propImagen.type = 'hidden';
+            propImagen.name = 'imagen';
+            propImagen.value = imagen;
+            form.appendChild(propImagen);
 
-            var eliminadoIn = document.createElement("input");
-            eliminadoIn.type = 'hidden';
-            eliminadoIn.name = 'eliminado';
-            eliminadoIn.value = eliminado;
-            form.appendChild(eliminadoIn);
+            var propEliminado = document.createElement("input");
+            propEliminado.type = 'hidden';
+            propEliminado.name = 'eliminado';
+            propEliminado.value = eliminado;
+            form.appendChild(propEliminado);
 
             form.method = 'POST';
             form.action = 'formulario_productos_v2.php';  
