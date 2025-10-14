@@ -23,7 +23,17 @@
         <fieldset>
             <ul>
                 <li><label for="form-name">Nombre:</label> <input type="text" name="nombre" id="form-name"></li><br>
-                <li><label for="form-name">Marca:</label> <input type="text" name="marca" id="form-marca"></li><br>
+
+                <li><label form="form-marca">Marca:</label>
+                    <select name="marca" id="form-marca">
+                        <option value="">Selecciona una marca</option>
+                        <option value="nike">Nike</option>
+                        <option value="adidas">Adidas</option>
+                        <option value="reebok">Reebok</option>
+                        <option value="salomon">Salomon</option>
+                    </select>
+                </li><br>
+
                 <li><label for="form-modelo">Modelo:</label> <input type="text" name="modelo" id="form-modelo"></li><br>
                 <li><label for="form-precio">Precio:</label> <input type="number" step="0.01" name="precio"
                         id="form-precio"></li><br>
@@ -42,47 +52,55 @@
         </p>
 
     </form>
-<!--
     <script>
         document.getElementById("formulario").addEventListener("submit", function (event) {
             event.preventDefault();
 
-            let nombre = document.getElementById("form-name").value.trim();
-            let marca = document.getElementById("form-marca").value;
-            let modelo = document.getElementById("form-modelo").value.trim();
-            let precio = parseFloat(document.getElementById("form-precio").value);
-            let detalles = document.getElementById("form-detalles").value.trim();
-            let unidades = parseInt(document.getElementById("form-unidades").value);
-            let imagen = document.getElementById("form-imagen").value.trim();
+            const DEFAULT_IMAGE = "img/imagen.png";
 
-            if (!nombre) {
-                alert("El nombre es requerido.");
-                return;
-            }
-            if (!marca) {
-                alert("La marca es requerida.");
-                return;
-            }
-            if (!precio) {
-                alert("El precio es requerido.");
-                return;
-            }
-            if (!unidades) {
-                alert("Las unidades son requeridas.");
-                return;
-            }
-            if (unidades < 0) {
-                alert("Las unidades deben ser 0 o más.");
-                return;
-            }
+            const nombre = document.getElementById("form-name").value;
+            const marca = document.getElementById("form-marca").value;
+            const modelo = document.getElementById("form-modelo").value;
+            const precioV = document.getElementById("form-precio").value;
+            const precio = parseFloat(precioV);
+            const detalles = document.getElementById("form-detalles").value;
+            const unidadesV = document.getElementById("form-unidades").value;
+            const unidades = parseInt(unidadesV, 10);
+            const imagenEl = document.getElementById("form-imagen");
+            let imagen = imagenEl.value.trim();
+
+            // a) Nombre
+            if (!nombre) { alert("El nombre es requerido."); return; }
+            if (nombre.length > 100) { alert("El nombre debe tener 100 caracteres o menos."); return; }
+
+            // b) Marca
+            if (!marca) { alert("La marca es requerida."); return; }
+
+            // c) Modelo
+            if (!modelo) { alert("El modelo es requerido."); return; }
+            if (!/^[A-Za-z0-9]+$/.test(modelo)) { alert("El modelo debe ser alfanumérico."); return; }
+            if (modelo.length > 25) { alert("El modelo debe tener 25 caracteres o menos."); return; }
+
+            // d) Precio
+            if (precioV === "" || isNaN(precio)) { alert("El precio es requerido."); return; }
+            if (precio <= 99.99) { alert("El precio debe ser mayor a 99.99."); return; }
+
+            // e) Detalles (opcional)
+            if (detalles.length > 250) { alert("Los detalles no pueden exceder 250 caracteres."); return; }
+
+            // f) Unidades
+            if (unidadesV === "" || isNaN(unidades)) { alert("Las unidades son requeridas."); return; }
+            if (unidades < 0) { alert("Las unidades deben ser 0 o más."); return; }
+
+            // g) Imagen (opcional con valor por defecto para el envío)
             if (!imagen) {
-                imagen = "img/imagen.png";
+                imagenEl.value = DEFAULT_IMAGE; // <-- se envía al servidor este valor
             }
 
-            
+            // ¡Ahora sí! Enviar el formulario
+            this.submit();
         });
     </script>
--->
 </body>
 
 </html>
