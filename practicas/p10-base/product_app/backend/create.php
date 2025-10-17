@@ -1,39 +1,110 @@
 <?php
-    include_once __DIR__.'/database.php';
+include_once __DIR__ . '/database.php';
+header('Content-Type: application/json; charset=utf-8');
 
-    // SE OBTIENE LA INFORMACIÓN DEL PRODUCTO ENVIADA POR EL CLIENTE
-    $producto = file_get_contents('php://input');
-
-if (!empty($producto)) {
-    $jsonOBJ = json_decode($producto, true);
-
-    $nombre   = mysqli_real_escape_string($conexion, $jsonOBJ['nombre'] ?? '');
-    $marca    = mysqli_real_escape_string($conexion, $jsonOBJ['marca'] ?? '');
-    $modelo   = mysqli_real_escape_string($conexion, $jsonOBJ['modelo'] ?? '');
-    $precio   = isset($jsonOBJ['precio']) && $jsonOBJ['precio'] !== '' ? (float)$jsonOBJ['precio'] : "NULL";
-    $detalles = mysqli_real_escape_string($conexion, $jsonOBJ['detalles'] ?? '');
-    $unidades = isset($jsonOBJ['unidades']) && $jsonOBJ['unidades'] !== '' ? (int)$jsonOBJ['unidades'] : "NULL";
-    $imagen   = mysqli_real_escape_string($conexion, $jsonOBJ['imagen'] ?? '');
-
-    // Verificar si el producto ya existe
-    $sql_check = "SELECT id FROM productos 
-                  WHERE eliminado = 0 AND ((nombre = '$nombre' AND marca = '$marca') OR (marca = '$marca' AND modelo = '$modelo'))";
-
-    $result = $conexion->query($sql_check);
-
-    if ($result->num_rows > 0) {
-        echo json_encode(["error" => "El producto ya existe en la base de datos."]);
-    } else {
-        $sql_insert = "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado) 
-                       VALUES ('$nombre', '$marca', '$modelo', $precio, '$detalles', $unidades, '$imagen', 0)";
-
-        if ($conexion->query($sql_insert)) {
-            echo json_encode(["success" => "Producto agregado correctamente"]);
-        } else {
-            echo json_encode(["error" => "Error al insertar producto: " . $conexion->error]);
-        }
-    }
+// Lee JSON
+$payload = file_get_contents('php://input');
+if (!$payload) {
+  http_response_code(400);
+  echo json_encode(["error" => "Solicitud vacía."]); exit;
+}
+$data = json_decode($payload, true);
+if (!is_array($data)) {
+  http_response_code(400);
+  echo json_encode(["error" => "JSON inválido."]); exit;
 }
 
+// Normaliza
+$nombre   = trim($data['nombre']  ?? '');
+$marca    = trim($data['marca']   ?? '');
+$modelo   = trim($data['modelo']  ?? '');
+$precio   = isset($data['precio']) ? floatval($data['precio']) : null;
+$detalles = trim($data['detalles'] ?? '');
+$unidades = isset($data['unidades']) ? intval($data['unidades']) : null;
+$imagen   = trim($data['imagen']   ?? 'img/default.png');
+
+// Validación servidor (refleja la del cliente)
+$errors = [];
+
+// nombre: 1..100 y regex permisiva de letras con acentos/números/espacios/ -,.#()
+if ($nombre === '' || mb_strlen($nombre) > 100 || !preg_match('/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s\-.,#()]+$/u', $nombre)) {
+  $errors[] = "Nombre inválido.";
+}
+if ($marca === '' || $marca === 'NA') {
+  $errors[] = "Marca inválida.";
+}
+if ($modelo === '' || mb_strlen($modelo) > 25 || !preg_match('/^[A-Za-z0-9\-]+$/', $modelo)) {
+  $errors[] = "Modelo inválido.";
+}
+if ($precio === null || $precio <= 99.99) {
+  $errors[] = "Precio inválido.";
+}
+if (mb_strlen($detalles) > 250) {
+  $errors[] = "Detalles demasiado largos.";
+}
+if ($unidades === null || $unidades < 0) {
+  $errors[] = "Unidades inválidas.";
+}
+if ($errors) {
+  http_response_code(400);
+  echo json_encode(["error" => implode(' ', $errors)]); exit;
+}
+
+// ------------- DUPLICADOS (eliminado = 0) -------------
+/**
+ * 1) mismo (nombre + marca)
+ * 2) misma (marca + modelo)
+ * 3) mismo (modelo) —si tu regla lo exige
+ */
+function existe($conexion, $sql, $types, ...$vals) {
+  $stmt = $conexion->prepare($sql);
+  if (!$stmt) return false;
+  $stmt->bind_param($types, ...$vals);
+  $ok = $stmt->execute();
+  if (!$ok) { $stmt->close(); return false; }
+  $stmt->store_result();
+  $hay = $stmt->num_rows > 0;
+  $stmt->close();
+  return $hay;
+}
+
+if (existe($conexion,
+  "SELECT id FROM productos WHERE eliminado = 0 AND nombre = ? AND marca = ? LIMIT 1",
+  "ss", $nombre, $marca)) {
+  echo json_encode(["error" => "Ya existe un producto con el mismo nombre y marca."]); exit;
+}
+
+if (existe($conexion,
+  "SELECT id FROM productos WHERE eliminado = 0 AND marca = ? AND modelo = ? LIMIT 1",
+  "ss", $marca, $modelo)) {
+  echo json_encode(["error" => "Ya existe un producto con la misma marca y modelo."]); exit;
+}
+
+// Si además quieres bloquear modelo repetido globalmente (con eliminado=0)
+if (existe($conexion,
+  "SELECT id FROM productos WHERE eliminado = 0 AND modelo = ? LIMIT 1",
+  "s", $modelo)) {
+  echo json_encode(["error" => "Ya existe un producto con el mismo modelo."]); exit;
+}
+
+// ------------- INSERT (sin enviar id) -------------
+$stmt = $conexion->prepare(
+  "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado)
+   VALUES (?, ?, ?, ?, ?, ?, ?, 0)"
+);
+if (!$stmt) {
+  http_response_code(500);
+  echo json_encode(["error" => "Error al preparar inserción: ".$conexion->error]); exit;
+}
+$stmt->bind_param("sssdsis",
+  $nombre, $marca, $modelo, $precio, $detalles, $unidades, $imagen
+);
+$ok = $stmt->execute();
+if ($ok) {
+  echo json_encode(["success" => "Producto agregado correctamente", "insert_id" => $conexion->insert_id]);
+} else {
+  http_response_code(500);
+  echo json_encode(["error" => "Error al insertar: ".$stmt->error]);
+}
+$stmt->close();
 $conexion->close();
-?>

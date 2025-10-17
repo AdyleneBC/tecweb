@@ -144,85 +144,87 @@ function buscarProducto(e) {
     client.send("id=" + keyword);
 }
 
-function validarProducto(finalJSON, nombre) {
-    let errores = [];
+function validarProducto(finalJSON) {
+  const errores = [];
 
-    if (!nombre || nombre.length > 100) {
-        errores.push("El nombre es obligatorio y debe tener 100 caracteres o menos.");
-    }
+  // nombre vendrá del JSON (o del input si lo llenaste; ver agregarProducto)
+  const nombre = String(finalJSON.nombre || "").trim();
+  const nombreRegex = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s\-.,#()]+$/; // letras (con acentos), números, espacio y - . , # ( )
 
-    let marca = finalJSON.marca ? finalJSON.marca.trim() : "";
-    if (!marca||marca=="NA") {
-        errores.push("La marca es obligatoria.");
-    }
+  if (!nombre || nombre.length > 100 || !nombreRegex.test(nombre)) {
+    errores.push("El nombre es obligatorio, <=100 caracteres y sin símbolos raros.");
+  }
 
-    let modelo = finalJSON.modelo ? finalJSON.modelo.trim() : "";
-    let modeloRegex = /^[a-zA-Z0-9\-]+$/; // Solo letras, números y guiones
-    if (!modelo || modelo.length > 25 || !modeloRegex.test(modelo)) {
-        errores.push("El modelo es obligatorio, alfanumérico y debe tener 25 caracteres o menos.");
-    }
+  const marca = (finalJSON.marca || "").trim();
+  if (!marca || marca === "NA") errores.push("La marca es obligatoria.");
 
-    let precio = parseFloat(finalJSON.precio);
-    if (isNaN(precio) || precio <= 99.99) {
-        errores.push("El precio es obligatorio y debe ser mayor a 99.99.");
-    }
+  const modelo = (finalJSON.modelo || "").trim();
+  const modeloRegex = /^[A-Za-z0-9\-]+$/;
+  if (!modelo || modelo.length > 25 || !modeloRegex.test(modelo))
+    errores.push("El modelo es obligatorio, alfanumérico/guion, <=25.");
 
-    let detalles = finalJSON.detalles ? finalJSON.detalles.trim() : "";
-    if (detalles.length > 250) {
-        errores.push("Los detalles deben tener 250 caracteres o menos.");
-    }
+  const precio = parseFloat(finalJSON.precio);
+  if (isNaN(precio) || precio <= 99.99) errores.push("El precio debe ser > 99.99.");
 
-    let unidades = parseInt(finalJSON.unidades);
-    if (isNaN(unidades) || unidades <= 0) {
-        errores.push("Las unidades son obligatorias y deben ser 0 o más.");
-    }
+  const detalles = (finalJSON.detalles || "").trim();
+  if (detalles.length > 250) errores.push("Los detalles deben ser <=250 caracteres.");
 
-    return errores;
+  const unidades = parseInt(finalJSON.unidades, 10);
+  if (isNaN(unidades) || unidades < 0) errores.push("Las unidades deben ser 0 o más.");
+
+  return errores;
 }
+
+
 //FUNCIÓN CALLBACK DE BOTÓN "Agregar producto"
 function agregarProducto(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    // SE OBTIENE DESDE EL FORMULARIO EL JSON A ENVIAR
-    var productoJsonString = document.getElementById('description').value;
+  const inputNombre = (document.getElementById("name").value || "").trim();
+  let raw = document.getElementById("description").value || "";
 
-    // SE CONVIERTE EL JSON DE STRING A OBJETO
-    var finalJSON = JSON.parse(productoJsonString);
+  let finalJSON;
+  try {
+    finalJSON = JSON.parse(raw);
+  } catch {
+    alert("El contenido de la descripción no es un JSON válido.");
+    return;
+  }
 
-    // SE OBTIENE EL NOMBRE DESDE EL FORMULARIO
-    let nombre = document.getElementById('name').value.trim();
+  // si el input está vacío, usamos el nombre que venga en el JSON
+  const nombre = inputNombre || String(finalJSON.nombre || "").trim();
+  finalJSON.nombre   = nombre;                                  // <= ya NO lo vaciamos
+  finalJSON.marca    = (finalJSON.marca    || "").trim();
+  finalJSON.modelo   = (finalJSON.modelo   || "").trim();
+  finalJSON.detalles = (finalJSON.detalles || "").trim();
+  finalJSON.imagen   = (finalJSON.imagen   || "img/default.png").trim();
+  finalJSON.precio   = Number(finalJSON.precio);
+  finalJSON.unidades = Number.isInteger(finalJSON.unidades)
+                        ? finalJSON.unidades
+                        : parseInt(finalJSON.unidades || "0", 10);
 
-    // LLAMAR A LA FUNCIÓN DE VALIDACIÓN
-    let errores = validarProducto(finalJSON, nombre);
+  const errores = validarProducto(finalJSON);
+  if (errores.length) {
+    alert("Errores:\n" + errores.join("\n"));
+    return;
+  }
 
-    // SI HAY ERRORES, SE MUESTRAN Y SE DETIENE LA EJECUCIÓN
-    if (errores.length > 0) {
-        alert("Errores:\n" + errores.join("\n"));
-        return;
+  const client = getXMLHttpRequest();
+  client.open("POST", "./backend/create.php", true);
+  client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  client.onreadystatechange = function () {
+    if (client.readyState === 4) {
+      let res = {};
+      try { res = JSON.parse(client.responseText || "{}"); } catch {}
+      if (client.status === 200 && res.success) {
+        alert(res.success + (res.insert_id ? " (id: " + res.insert_id + ")" : ""));
+        document.getElementById("search").value = nombre;       // refresca búsqueda
+        buscarProducto(new Event("submit"));
+      } else {
+        alert(res.error || "Error desconocido al insertar.");
+      }
     }
-
-    // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
-    finalJSON['nombre'] = nombre;
-
-    // SE OBTIENE EL STRING DEL JSON FINAL
-    productoJsonString = JSON.stringify(finalJSON, null, 2);
-
-    // SE CREA EL OBJETO DE CONEXIÓN ASÍNCRONA AL SERVIDOR
-    var client = getXMLHttpRequest();
-    client.open('POST', './backend/create.php', true);
-    client.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
-    client.onreadystatechange = function () {
-        // SE VERIFICA SI LA RESPUESTA ESTÁ LISTA Y FUE SATISFACTORIA
-        if (client.readyState == 4 && client.status == 200) {
-            let response = JSON.parse(client.responseText);
-            if (response.success) {
-                console.log("Success: " + response.success);
-                alert(response.success);
-            } else if (response.error) {
-                console.log("Error: " + response.error);
-                alert(response.error);
-            }
-        }
-    };
-    client.send(productoJsonString);
+  };
+  client.send(JSON.stringify(finalJSON));
 }
+
