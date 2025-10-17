@@ -12,14 +12,8 @@
       
         <ul></ul>
         <form>
-          <input name="search" id="search" type="search" placeholder="ID">
-          <button type="submit" onclick="buscarID(event)">Buscar</button>
-          <input  id="search-nom" type="search" placeholder="NOMBRE">
-          <button type="submit" onclick="buscarProducto(event, 'search-nom', 'nombre')">Buscar</button><br><br>
-          <input id="search-marca" type="search" placeholder="MARCA">
-          <button type="submit" onclick="buscarProducto(event,'search-marca', 'marca')">Buscar</button><br><br>
-          <input id="search-det" type="search" placeholder="DETALLES">
-          <button type="submit" onclick="buscarProducto(event,'search-det', 'detalles')">Buscar</button><br><br>          
+          <input name="search" id="search" type="search" placeholder="Nombre, marca o detalles">
+          <button type="submit" onclick="buscarProducto(event)">Buscar</button>
         </form>
     </nav>
 
@@ -27,14 +21,15 @@
       <div>
         <!-- FORMULARIO PARA AGREGAR PRODUCTO -->
         <form id="task-form">
-          <div>
-            <input type="text" id="name" placeholder="Nombre de producto">
-          </div>
-          <div>
-            <textarea id="description" cols="30" rows="10" placeholder="JSON de producto"></textarea>
-          </div>
-          <input type="hidden" id="taskId">
-          <button type="submit" onclick="agregarProducto(event)" >
+          <form id="task-form">
+            <div>
+              <input type="text" id="name" placeholder="Nombre de producto">
+            </div>
+            <div>
+              <textarea id="description" cols="30" rows="10" placeholder="JSON de producto"></textarea>
+            </div>
+            <input type="hidden" id="taskId">
+            <button type="submit" onclick="agregarProducto(event)" >
             Agregar Producto
           </button>
         </form>

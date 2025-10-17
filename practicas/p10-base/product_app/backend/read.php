@@ -1,27 +1,46 @@
 <?php
     include_once __DIR__.'/database.php';
-
+    /*
     // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
     $data = array();
-    // SE VERIFICA HABER RECIBIDO ALGÚN PARÁMETRO
-    if (isset($_POST['id']) || isset($_POST['nombre']) || isset($_POST['marca']) || isset($_POST['detalles'])) {
-        // Obtener los valores de los parámetros y agregar el comodín "%" para el LIKE
-        $id = isset($_POST['id']) ? $conexion->real_escape_string($_POST['id']) : '';
-        $nombre = isset($_POST['nombre']) ? "%" . $conexion->real_escape_string($_POST['nombre']) . "%" : '';
-        $marca = isset($_POST['marca']) ? "%" . $conexion->real_escape_string($_POST['marca']) . "%" : '';
-        $detalles = isset($_POST['detalles']) ? "%" . $conexion->real_escape_string($_POST['detalles']) . "%" : '';
+    // SE VERIFICA HABER RECIBIDO EL ID
+    if( isset($_POST['id']) ) {
+        $id = $_POST['id'];
+        // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
+        if ( $result = $conexion->query("SELECT * FROM productos WHERE id = '{$id}'") ) {
+            // SE OBTIENEN LOS RESULTADOS
+			$row = $result->fetch_array(MYSQLI_ASSOC);
 
-        // Construcción de la consulta de búsqueda
-        $query = "SELECT * FROM productos WHERE id='$id' or nombre LIKE '$nombre' or marca LIKE '$marca' or detalles LIKE '$detalles'";
-        // Ejecutar la consulta
-        if ($result = $conexion->query($query)) {
-            // Verificamos si hay resultados
-            while ($row = $result->fetch_assoc()) {
-                // Agregar cada producto al arreglo de respuesta
-                $data[] = $row;
+            if(!is_null($row)) {
+                // SE CODIFICAN A UTF-8 LOS DATOS Y SE MAPEAN AL ARREGLO DE RESPUESTA
+                foreach($row as $key => $value) {
+                    $data[$key] = $value; // utf8_encode($value);
+                }
             }
 			$result->free();
 		} else {
+            die('Query Error: '.mysqli_error($conexion));
+        }
+		$conexion->close();
+    } 
+    
+    // SE HACE LA CONVERSIÓN DE ARRAY A JSON
+    echo json_encode($data, JSON_PRETTY_PRINT);
+    */
+
+    // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
+    $data = array();
+
+    if(isset($_POST['id'])) {
+        $id = $conexion->real_escape_string($_POST['id']); // Evitamos inyecciones SQL
+        $query = "SELECT * FROM productos WHERE id = '$id' OR nombre LIKE '%$id%' OR marca LIKE '%$id%' OR modelo LIKE '%$id%' OR detalles LIKE '%$id%'";
+        
+        if($result = $conexion->query($query)) {
+            while($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            $result->free();
+            } else {
             die('Query Error: '.mysqli_error($conexion));
         }
 		$conexion->close();
