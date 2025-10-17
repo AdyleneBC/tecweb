@@ -23,10 +23,10 @@ $detalles = trim($data['detalles'] ?? '');
 $unidades = isset($data['unidades']) ? intval($data['unidades']) : null;
 $imagen   = trim($data['imagen']   ?? 'img/default.png');
 
-// Validación servidor (refleja la del cliente)
+
 $errors = [];
 
-// nombre: 1..100 y regex permisiva de letras con acentos/números/espacios/ -,.#()
+
 if ($nombre === '' || mb_strlen($nombre) > 100 || !preg_match('/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s\-.,#()]+$/u', $nombre)) {
   $errors[] = "Nombre inválido.";
 }
@@ -50,12 +50,7 @@ if ($errors) {
   echo json_encode(["error" => implode(' ', $errors)]); exit;
 }
 
-// ------------- DUPLICADOS (eliminado = 0) -------------
-/**
- * 1) mismo (nombre + marca)
- * 2) misma (marca + modelo)
- * 3) mismo (modelo) —si tu regla lo exige
- */
+//DUPLICADOS 
 function existe($conexion, $sql, $types, ...$vals) {
   $stmt = $conexion->prepare($sql);
   if (!$stmt) return false;
@@ -80,14 +75,13 @@ if (existe($conexion,
   echo json_encode(["error" => "Ya existe un producto con la misma marca y modelo."]); exit;
 }
 
-// Si además quieres bloquear modelo repetido globalmente (con eliminado=0)
+
 if (existe($conexion,
   "SELECT id FROM productos WHERE eliminado = 0 AND modelo = ? LIMIT 1",
   "s", $modelo)) {
   echo json_encode(["error" => "Ya existe un producto con el mismo modelo."]); exit;
 }
-
-// ------------- INSERT (sin enviar id) -------------
+//Agregué esto porque creo que mi id está mal, pero investigué y el auto inrement no se reinicia
 $stmt = $conexion->prepare(
   "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado)
    VALUES (?, ?, ?, ?, ?, ?, ?, 0)"

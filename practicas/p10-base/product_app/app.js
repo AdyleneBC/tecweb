@@ -30,7 +30,7 @@ function buscarID(e) {
             console.log('[CLIENTE]\n'+client.responseText);
             
             // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
-            let productos = JSON.parse(client.responseText);    // similar a eval('('+client.responseText+')');
+            let productos = JSON.parse(client.responseText);    
             
             // SE VERIFICA SI EL OBJETO JSON TIENE DATOS
             if(Object.keys(productos).length > 0) {
@@ -147,7 +147,6 @@ function buscarProducto(e) {
 function validarProducto(finalJSON) {
   const errores = [];
 
-  // nombre vendrá del JSON (o del input si lo llenaste; ver agregarProducto)
   const nombre = String(finalJSON.nombre || "").trim();
   const nombreRegex = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s\-.,#()]+$/; // letras (con acentos), números, espacio y - . , # ( )
 
@@ -193,7 +192,7 @@ function agregarProducto(e) {
 
   // si el input está vacío, usamos el nombre que venga en el JSON
   const nombre = inputNombre || String(finalJSON.nombre || "").trim();
-  finalJSON.nombre   = nombre;                                  // <= ya NO lo vaciamos
+  finalJSON.nombre   = nombre;                                  
   finalJSON.marca    = (finalJSON.marca    || "").trim();
   finalJSON.modelo   = (finalJSON.modelo   || "").trim();
   finalJSON.detalles = (finalJSON.detalles || "").trim();
@@ -218,7 +217,7 @@ function agregarProducto(e) {
       try { res = JSON.parse(client.responseText || "{}"); } catch {}
       if (client.status === 200 && res.success) {
         alert(res.success + (res.insert_id ? " (id: " + res.insert_id + ")" : ""));
-        document.getElementById("search").value = nombre;       // refresca búsqueda
+        document.getElementById("search").value = nombre;       
         buscarProducto(new Event("submit"));
       } else {
         alert(res.error || "Error desconocido al insertar.");
