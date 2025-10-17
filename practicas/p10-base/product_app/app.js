@@ -60,32 +60,6 @@ function buscarID(e) {
     client.send("id="+id);
 }
 
-// FUNCIÓN CALLBACK DE BOTÓN "Agregar Producto"
-function agregarProducto(e) {
-    e.preventDefault();
-
-    // SE OBTIENE DESDE EL FORMULARIO EL JSON A ENVIAR
-    var productoJsonString = document.getElementById('description').value;
-    // SE CONVIERTE EL JSON DE STRING A OBJETO
-    var finalJSON = JSON.parse(productoJsonString);
-    // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
-    finalJSON['nombre'] = document.getElementById('name').value;
-    // SE OBTIENE EL STRING DEL JSON FINAL
-    productoJsonString = JSON.stringify(finalJSON,null,2);
-
-    // SE CREA EL OBJETO DE CONEXIÓN ASÍNCRONA AL SERVIDOR
-    var client = getXMLHttpRequest();
-    client.open('POST', './backend/create.php', true);
-    client.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
-    client.onreadystatechange = function () {
-        // SE VERIFICA SI LA RESPUESTA ESTÁ LISTA Y FUE SATISFACTORIA
-        if (client.readyState == 4 && client.status == 200) {
-            console.log(client.responseText);
-        }
-    };
-    client.send(productoJsonString);
-}
-
 // SE CREA EL OBJETO DE CONEXIÓN COMPATIBLE CON EL NAVEGADOR
 function getXMLHttpRequest() {
     var objetoAjax;
@@ -168,4 +142,87 @@ function buscarProducto(e) {
         }
     };
     client.send("id=" + keyword);
+}
+
+function validarProducto(finalJSON, nombre) {
+    let errores = [];
+
+    if (!nombre || nombre.length > 100) {
+        errores.push("El nombre es obligatorio y debe tener 100 caracteres o menos.");
+    }
+
+    let marca = finalJSON.marca ? finalJSON.marca.trim() : "";
+    if (!marca||marca=="NA") {
+        errores.push("La marca es obligatoria.");
+    }
+
+    let modelo = finalJSON.modelo ? finalJSON.modelo.trim() : "";
+    let modeloRegex = /^[a-zA-Z0-9\-]+$/; // Solo letras, números y guiones
+    if (!modelo || modelo.length > 25 || !modeloRegex.test(modelo)) {
+        errores.push("El modelo es obligatorio, alfanumérico y debe tener 25 caracteres o menos.");
+    }
+
+    let precio = parseFloat(finalJSON.precio);
+    if (isNaN(precio) || precio <= 99.99) {
+        errores.push("El precio es obligatorio y debe ser mayor a 99.99.");
+    }
+
+    let detalles = finalJSON.detalles ? finalJSON.detalles.trim() : "";
+    if (detalles.length > 250) {
+        errores.push("Los detalles deben tener 250 caracteres o menos.");
+    }
+
+    let unidades = parseInt(finalJSON.unidades);
+    if (isNaN(unidades) || unidades <= 0) {
+        errores.push("Las unidades son obligatorias y deben ser 0 o más.");
+    }
+
+    return errores;
+}
+//FUNCIÓN CALLBACK DE BOTÓN "Agregar producto"
+function agregarProducto(e) {
+    e.preventDefault();
+
+    // SE OBTIENE DESDE EL FORMULARIO EL JSON A ENVIAR
+    var productoJsonString = document.getElementById('description').value;
+
+    // SE CONVIERTE EL JSON DE STRING A OBJETO
+    var finalJSON = JSON.parse(productoJsonString);
+
+    // SE OBTIENE EL NOMBRE DESDE EL FORMULARIO
+    let nombre = document.getElementById('name').value.trim();
+
+    // LLAMAR A LA FUNCIÓN DE VALIDACIÓN
+    let errores = validarProducto(finalJSON, nombre);
+
+    // SI HAY ERRORES, SE MUESTRAN Y SE DETIENE LA EJECUCIÓN
+    if (errores.length > 0) {
+        alert("Errores:\n" + errores.join("\n"));
+        return;
+    }
+
+    // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
+    finalJSON['nombre'] = nombre;
+
+    // SE OBTIENE EL STRING DEL JSON FINAL
+    productoJsonString = JSON.stringify(finalJSON, null, 2);
+
+    // SE CREA EL OBJETO DE CONEXIÓN ASÍNCRONA AL SERVIDOR
+    var client = getXMLHttpRequest();
+    client.open('POST', './backend/create.php', true);
+    client.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    client.onreadystatechange = function () {
+        // SE VERIFICA SI LA RESPUESTA ESTÁ LISTA Y FUE SATISFACTORIA
+        if (client.readyState == 4 && client.status == 200) {
+            let response = JSON.parse(client.responseText);
+            if (response.success) {
+                console.log("Success: " + response.success);
+                alert(response.success);
+            } else if (response.error) {
+                console.log("Error: " + response.error);
+                alert(response.error);
+            }
+        }
+    };
+    client.send(productoJsonString);
 }
