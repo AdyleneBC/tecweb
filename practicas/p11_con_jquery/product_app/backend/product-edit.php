@@ -1,5 +1,4 @@
 <?php
-// backend/product-edit.php
 include_once __DIR__ . '/database.php';
 header('Content-Type: application/json; charset=utf-8');
 
