@@ -14,7 +14,7 @@ function init() {
     cargarLista();   // i) lista completa al abrir
 }
 
-// ====== Helpers de UI (barra de estado)
+
 function mostrarEstado(status, message) {
     $('#product-result').removeClass('d-none').addClass('d-block');
     $('#container').html(`
@@ -24,7 +24,7 @@ function mostrarEstado(status, message) {
 }
 function ocultarEstado() { $('#product-result').addClass('d-none').removeClass('d-block'); $('#container').empty(); }
 
-// ====== Render de tabla (nombre clickeable para editar)
+//nombre clickeable para editar
 function renderTabla(productos) {
     if (!Array.isArray(productos) || productos.length === 0) {
         $('#products').empty(); return;
@@ -47,11 +47,10 @@ function renderTabla(productos) {
     $('#products').html(filas);
 }
 
-// ====== i) Listar productos al abrir
+//Listar productos al abrir con valor de eliminar = 0
 function cargarLista() {
     $.getJSON('./backend/product-list.php', function (productos) {
         renderTabla(productos);
-        // no ocultes la barra para que se vea el último success si lo hubo
     }).fail(function (xhr) {
         renderTabla([]);
         mostrarEstado('error', xhr?.responseText || 'No se pudo cargar la lista.');
@@ -61,7 +60,7 @@ function cargarLista() {
 $(function () {
     let edit = false;
 
-    // ii & iii) Búsqueda en vivo (tabla + barra de nombres)
+    //Búsqueda en vivo
     $('#search').on('input', function () {
         const q = $(this).val().trim();
         if (q.length === 0) { ocultarEstado(); cargarLista(); return; }
@@ -80,7 +79,7 @@ $(function () {
         });
     });
 
-    // iv & v) Agregar / Actualizar
+    // Agregar y Actualizar
     $('#product-form').on('submit', function (e) {
         e.preventDefault();
 
@@ -116,7 +115,7 @@ $(function () {
         });
     });
 
-    // (cliente) Modo edición: click en nombre
+    //click en nombre
     $('#products').on('click', '.product-item', function (e) {
         e.preventDefault();
         const id = $(this).closest('tr').attr('productId');
@@ -130,7 +129,7 @@ $(function () {
             $('#productId').val(p.id);
 
             const current = tryParse($('#description').val()) || {};
-            const merged = Object.assign({}, current, p); // mezcla para que textarea quede completo
+            const merged = Object.assign({}, current, p); 
             $('#description').val(JSON.stringify(merged, null, 2));
 
             edit = true;
@@ -141,7 +140,7 @@ $(function () {
         });
     });
 
-    // vi) Eliminar
+    //Eliminar
     $('#products').on('click', '.product-delete', function () {
         const id = $(this).closest('tr').attr('productId');
         if (!confirm('De verdad deseas eliminar el Producto')) return;
