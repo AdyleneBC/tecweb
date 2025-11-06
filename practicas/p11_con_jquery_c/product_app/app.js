@@ -121,49 +121,59 @@ $(document).ready(function () {
     $('#product-form').submit(e => {
         e.preventDefault();
 
-        // Construimos el objeto a partir de los campos del formulario (sin JSON en textarea)
-        const postData = {
+        // SE CONVIERTE EL JSON DE STRING A OBJETO
+        //let postData = JSON.parse( $('#description').val() );
+        // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
+        // postData['nombre'] = $('#name').val();
+        //postData['id'] = $('#productId').val();
+
+        let postData = {
             nombre: $('#name').val(),
             marca: $('#marca').val(),
             modelo: $('#modelo').val(),
-            precio: parseFloat($('#precio').val() || 0),
+            precio: $('#precio').val(),
+            unidades: $('#unidades').val(),
             detalles: $('#detalles').val(),
-            unidades: parseInt($('#unidades').val() || 0),
             imagen: $('#imagen').val(),
             id: $('#productId').val()
         };
 
-        // (Aquí puedes agregar validaciones antes de enviar)
+
+        /**
+         * AQUÍ DEBES AGREGAR LAS VALIDACIONES DE LOS DATOS EN EL JSON
+         * --> EN CASO DE NO HABER ERRORES, SE ENVIAR EL PRODUCTO A AGREGAR
+         **/
 
         const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
-        $.post(url, postData, (response) => {
-            let respuesta = JSON.parse(response);
-            let template_bar = `
-      <li style="list-style: none;">status: ${respuesta.status}</li>
-      <li style="list-style: none;">message: ${respuesta.message}</li>
-    `;
 
-            // Reset de formulario
-            $('#name').val('');
-            $('#marca').val('');
-            $('#modelo').val('');
-            $('#precio').val('');
-            $('#detalles').val('');
-            $('#unidades').val('');
-            $('#imagen').val('');
+        $.post(url, postData, (response) => {
+            //console.log(response);
+            // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
+            let respuesta = JSON.parse(response);
+            // SE CREA UNA PLANTILLA PARA CREAR INFORMACIÓN DE LA BARRA DE ESTADO
+            let template_bar = '';
+            template_bar += `
+                        <li style="list-style: none;">status: ${respuesta.status}</li>
+                        <li style="list-style: none;">message: ${respuesta.message}</li>
+                    `;
+            // REINICIA EL FORMULARIO (versión con inputs)
+            $('#name, #marca, #modelo, #precio, #unidades, #detalles, #imagen').val('');
             $('#productId').val('');
 
+            // Muestra barra de estado 
             $('#product-result').show();
             $('#container').html(template_bar);
 
+            // Vuelve a listar y salir de modo edición
             listarProductos();
             edit = false;
 
-            // Volver el texto del botón a "Agregar Producto"
+
+            /***********AGREGAMOS ESTA LÍNEA PARA REGRESAR AL TEXTO ORIGINAL DESPUÉS DE MODIFICAR UN PRODUCTO****** */
             $('button.btn-primary').text('Agregar Producto');
+
         });
     });
-
 
     $(document).on('click', '.product-delete', (e) => {
         if (confirm('¿Realmente deseas eliminar el producto?')) {
@@ -176,28 +186,41 @@ $(document).ready(function () {
         }
     });
 
-    // Reemplaza el handler actual .product-item
-    $(document).on('click', '.product-item', function (e) {
-        e.preventDefault();
-        const id = $(this).closest('tr').attr('productId');
-
-        // Cambia el texto del botón al entrar a edición
-        $('button.btn-primary').text('Modificar Producto');
-
-        $.post('./backend/product-single.php', { id }, function (response) {
+    $(document).on('click', '.product-item', (e) => {
+        const element = $(this)[0].activeElement.parentElement.parentElement;
+        const id = $(element).attr('productId');
+        $.post('./backend/product-single.php', { id }, (response) => {
+            // SE CONVIERTE A OBJETO EL JSON OBTENIDO
             let product = JSON.parse(response);
-            // Cargar cada campo en su input
+            // SE INSERTAN LOS DATOS ESPECIALES EN LOS CAMPOS CORRESPONDIENTES
             $('#name').val(product.nombre);
+            // EL ID SE INSERTA EN UN CAMPO OCULTO PARA USARLO DESPUÉS PARA LA ACTUALIZACIÓN
             $('#productId').val(product.id);
+            // SE ELIMINA nombre, eliminado E id PARA PODER MOSTRAR EL JSON EN EL <textarea>
+            /*delete (product.nombre);
+            delete (product.eliminado);
+            delete (product.id);
+            // SE CONVIERTE EL OBJETO JSON EN STRING
+            let JsonString = JSON.stringify(product, null, 2);
+            // SE MUESTRA STRING EN EL <textarea>
+            $('#description').val(JsonString);*/
+
+            ////////////////////////
             $('#marca').val(product.marca || '');
             $('#modelo').val(product.modelo || '');
             $('#precio').val(product.precio || '');
-            $('#detalles').val(product.detalles || '');
             $('#unidades').val(product.unidades || '');
+            $('#detalles').val(product.detalles || '');
             $('#imagen').val(product.imagen || '');
 
-            edit = true;
-        });
-    });
 
+            // SE PONE LA BANDERA DE EDICIÓN EN true
+            edit = true;
+
+            /***********AGREGAMOS LÍNEA PARA MODIFICAR EL TEXTO DEL BOTON A  MODIFICAR PRODUCTO******** */
+            $('button.btn-primary').text("Modificar Producto");
+
+        });
+        e.preventDefault();
+    });
 });
