@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>ProductApp</title>
   <!-- BOOTSTRAP 4  -->
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sketchy/bootstrap.min.css">
 </head>
 
 <body>
@@ -36,26 +36,47 @@
             <!-- FORMULARIO PARA AGREGAR PRODUCTO -->
             <form id="product-form">
               <div class="form-group">
-                <input class="form-control" type="text" id="name" placeholder="Nombre de producto">
+                <input class="form-control" type="text" id="name" placeholder="Nombre de producto" maxlength="100">
+                <div class="invalid-feedback"></div>
               </div>
+
               <div class="form-group">
-                <input class="form-control" type="text" id="marca" placeholder="Marca">
+                <select class="form-control" id="marca">
+                  <option value="">Selecciona una marca</option>
+                  <option value="adidas">Adidas</option>
+                  <option value="nike">Nike</option>
+                  <option value="puma">Puma</option>
+                  <option value="salomon">Salomon</option>
+                </select>
+                <div class="invalid-feedback"></div>
               </div>
+
               <div class="form-group">
-                <input class="form-control" type="text" id="modelo" placeholder="Modelo">
+                <input class="form-control" type="text" id="modelo" placeholder="Modelo" maxlength="25">
+                <div class="invalid-feedback"></div>
               </div>
+
               <div class="form-group">
-                <input class="form-control" type="number" id="precio" placeholder="Precio">
+                <input class="form-control" type="number" step="0.01" id="precio" placeholder="Precio">
+                <div class="invalid-feedback"></div>
               </div>
+
               <div class="form-group">
-                <input class="form-control" type="number" id="unidades" placeholder="Unidades">
+                <input class="form-control" type="number" step="1" id="unidades" placeholder="Unidades">
+                <div class="invalid-feedback"></div>
               </div>
+
               <div class="form-group">
-                <input class="form-control" type="text" id="detalles" placeholder="Detalles">
+                <textarea class="form-control" id="detalles" rows="3" placeholder="Detalles (opcional)"
+                  maxlength="250"></textarea>
+                <div class="invalid-feedback"></div>
               </div>
+
               <div class="form-group">
-                <input class="form-control" type="text" id="imagen" placeholder="URL Imagen">
+                <input class="form-control" type="text" id="imagen" placeholder="URL de imagen (opcional)">
+                <div class="invalid-feedback"></div>
               </div>
+
 
               <input type="hidden" id="productId">
               <button class="btn btn-primary btn-block text-center" type="submit">

@@ -1,8 +1,8 @@
 <?php
     $conexion = @mysqli_connect(
         'localhost',
-        'admin_tw',
-        'adylene',
+        'root',
+        'adylen',
         'marketzone'
     );
 
