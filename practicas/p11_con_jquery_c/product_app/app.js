@@ -361,8 +361,8 @@ $(document).ready(function () {
                         const template_bar = `
             <li style="list-style:none;font-weight:bold;">El nombre "${nombre}" ya existe.</li>
           `;
-                        $('#product-result').show();      // card ya existe
-                        $('#container').html(template_bar); // ul ya existe
+                        $('#product-result').show();      //ya existe
+                        $('#container').html(template_bar); 
                     } else {
                         $('#name').removeClass('is-invalid');
                         // No oculto la barra aquí para no interferir con otros mensajes
