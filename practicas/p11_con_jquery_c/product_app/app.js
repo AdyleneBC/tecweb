@@ -157,21 +157,21 @@ $(document).ready(function () {
         let errores = [];
 
         if (postData.nombre.trim() === '' || postData.nombre.length > 100)
-            errores.push('->El nombre es obligatorio y máximo 100 caracteres.');
+            errores.push('->El nombre es obligatorio');
 
         if (postData.marca.trim() === '')
             errores.push('->Selecciona una marca.');
 
-        if (postData.modelo.trim() === '' || postData.modelo.length > 25 || !/^[a-zA-Z0-9\-]+$/.test(postData.modelo))
-            errores.push('->Modelo requerido, alfanumérico y máximo 25 caracteres.');
+        if (postData.modelo.trim() === '')
+            errores.push('->Modelo requerido');
 
         const precioNum = parseFloat(postData.precio);
-        if (isNaN(precioNum) || precioNum <= 99.99)
-            errores.push('->El precio debe ser mayor a $99.99.');
+        if (isNaN(precioNum))
+            errores.push('->Precio requerido');
 
         const unidadesNum = parseInt(postData.unidades);
-        if (isNaN(unidadesNum) || unidadesNum < 0)
-            errores.push('->Las unidades deben ser 0 o más.');
+        if (isNaN(unidadesNum))
+            errores.push('->Unidades requeridas');
 
         if ((postData.detalles || '').length > 250)
             errores.push('->Detalles menor a 250 caracteres.');
@@ -359,11 +359,17 @@ $(document).ready(function () {
 
                         // usamos la barra de estado para avisar que ya existe ese producto
                         const template_bar = `
-            <li style="list-style:none;font-weight:bold;">El nombre "${nombre}" ya existe.</li>
+            <li style="list-style:none;font-weight:bold;">El nombre "${nombre}" ya existe :(</li>
           `;
                         $('#product-result').show();      //ya existe
-                        $('#container').html(template_bar); 
+                        $('#container').html(template_bar);
                     } else {
+                        // usamos la barra de estado para avisar que no existe ese producto
+                        const template_bar = `
+            <li style="list-style:none;font-weight:bold;">El nombre "${nombre}" sin coincidencias :)</li>
+          `;
+                        $('#product-result').show();      //ya existe
+                        $('#container').html(template_bar);
                         $('#name').removeClass('is-invalid');
                         // No oculto la barra aquí para no interferir con otros mensajes
                     }
