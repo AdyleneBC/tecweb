@@ -369,7 +369,7 @@ $(document).ready(function () {
                     }
                 }
             });
-        }, 300); // debounce
+        }, 300); // línea consultada con IA
     });
 
 });
