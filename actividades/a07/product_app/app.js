@@ -230,7 +230,7 @@ $(document).ready(function () {
             });
         }
     });
-
+////////////MODIFICADO PARA AUTO LLENAR CAMPOS AL MODIFICAR
     $(document).on('click', '.product-item', (e) => {
         $(document).on('click', '.product-item', function (e) {
             e.preventDefault();
