@@ -43,11 +43,10 @@ $(document).ready(function () {
                                 <td>${producto.id}</td>
                                 <td><a href="#" class="product-item">${producto.nombre}</a></td>
                                 <td><ul>${descripcion}</ul></td>
-                                <td>
-                                    <button class="product-delete btn btn-danger" onclick="eliminarProducto()">
-                                        Eliminar
-                                    </button>
-                                </td>
+<td>
+  <button class="product-delete btn btn-danger">Eliminar</button>
+</td>
+
                             </tr>
                         `;
                     });
@@ -233,41 +232,37 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.product-item', (e) => {
-        const element = $(this)[0].activeElement.parentElement.parentElement;
-        const id = $(element).attr('productId');
-        $.post('./backend/product-single.php', { id }, (response) => {
-            // SE CONVIERTE A OBJETO EL JSON OBTENIDO
-            let product = JSON.parse(response);
-            // SE INSERTAN LOS DATOS ESPECIALES EN LOS CAMPOS CORRESPONDIENTES
-            $('#name').val(product.nombre);
-            // EL ID SE INSERTA EN UN CAMPO OCULTO PARA USARLO DESPUÉS PARA LA ACTUALIZACIÓN
-            $('#productId').val(product.id);
-            // SE ELIMINA nombre, eliminado E id PARA PODER MOSTRAR EL JSON EN EL <textarea>
-            /*delete (product.nombre);
-            delete (product.eliminado);
-            delete (product.id);
-            // SE CONVIERTE EL OBJETO JSON EN STRING
-            let JsonString = JSON.stringify(product, null, 2);
-            // SE MUESTRA STRING EN EL <textarea>
-            $('#description').val(JsonString);*/
+        $(document).on('click', '.product-item', function (e) {
+            e.preventDefault();
 
-            //textarea
-            $('#marca').val(product.marca || '');
-            $('#modelo').val(product.modelo || '');
-            $('#precio').val(product.precio || '');
-            $('#unidades').val(product.unidades || '');
-            $('#detalles').val(product.detalles || '');
-            $('#imagen').val(product.imagen || '');
+            // 1) Tomar el <tr> correcto y su id
+            const $row = $(e.target).closest('tr');
+            const id = $row.attr('productId');
 
+            // 2) Pedir datos al backend
+            $.post('./backend/product-single.php', { id }, (response) => {
+                let data;
+                try { data = JSON.parse(response); } catch (err) { data = {}; }
 
-            // SE PONE LA BANDERA DE EDICIÓN EN true
-            edit = true;
+                // 3) Soportar objeto o arreglo con un objeto
+                const product = Array.isArray(data) ? (data[0] || {}) : data;
 
-            /***********AGREGAMOS LÍNEA PARA MODIFICAR EL TEXTO DEL BOTON A  MODIFICAR PRODUCTO******** */
-            $('button.btn-primary').text("Modificar Producto");
+                // 4) Rellenar los campos
+                $('#name').val(product.nombre || '');
+                $('#productId').val(product.id || '');
+                $('#marca').val(product.marca || '');
+                $('#modelo').val(product.modelo || '');
+                $('#precio').val(product.precio || '');
+                $('#unidades').val(product.unidades || '');
+                $('#detalles').val(product.detalles || '');
+                $('#imagen').val(product.imagen || '');
 
+                // 5) Modo edición
+                edit = true;
+                $('button.btn-primary').text('Modificar Producto');
+            });
         });
-        e.preventDefault();
+
     });
 
     ///////////////////////////////////////

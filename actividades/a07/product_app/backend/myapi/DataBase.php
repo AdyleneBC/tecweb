@@ -2,18 +2,13 @@
 
 namespace TECWEB\MYAPI;
 
-/**
- * Clase abstracta DataBase conforme al UML:
- * - #conexion : mysqli (protected)
- * - +DataBase(db: string, user: string, pass: string)
- */
 abstract class DataBase
 {
     /** @var \mysqli|null */
     protected $conexion;
 
     /**
-     * Constructor: orden EXACTO según UML (db, user, pass)
+     * Constructor siguiendo el modelo UML que nos proporiono el pdf
      *
      * @param string $db   Nombre de la base de datos (obligatorio)
      * @param string $user Usuario de la BD (obligatorio)
@@ -41,5 +36,3 @@ abstract class DataBase
         }
     }*/
 }
-
-?>
