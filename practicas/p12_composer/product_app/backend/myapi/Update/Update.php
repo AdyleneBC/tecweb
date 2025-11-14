@@ -1,8 +1,8 @@
 <?php
 
-namespace TECWEB\MYAPI\Update;
+namespace MYAPI\Update;
 
-use TECWEB\MYAPI\DataBase;
+use MYAPI\DataBase;
 
 class Update extends DataBase
 {

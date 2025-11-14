@@ -1,6 +1,6 @@
 <?php
 
-namespace TECWEB\MYAPI;
+namespace MYAPI;
 
 abstract class DataBase
 {

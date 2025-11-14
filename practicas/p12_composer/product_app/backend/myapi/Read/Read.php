@@ -1,8 +1,8 @@
 <?php
 
-namespace TECWEB\MYAPI\Read;
+namespace MYAPI\Read;
 
-use TECWEB\MYAPI\DataBase;
+use MYAPI\DataBase;
 
 class Read extends DataBase
 {

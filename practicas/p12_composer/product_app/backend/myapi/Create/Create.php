@@ -1,8 +1,9 @@
 <?php
 
-namespace TECWEB\MYAPI\Create;
+namespace MYAPI\Create;
 
-use TECWEB\MYAPI\DataBase;
+
+use MYAPI\DataBase;
 
 class Create extends DataBase
 {
