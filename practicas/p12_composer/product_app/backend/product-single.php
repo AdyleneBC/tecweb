@@ -1,11 +1,11 @@
 <?php
 
-use TECWEB\MYAPI\Products;
+require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/myapi/Products.php';
+use MYAPI\Read\Read;
 
-$id = intval($_POST['id'] ?? 0);    
-$prodObj = new Products('marketzone', 'root', 'adylene');
+$id = intval($_POST['id'] ?? 0);
+
+$prodObj = new Read('marketzone');
 $prodObj->single($id);
 echo $prodObj->getData();
- ?>

@@ -1,8 +1,8 @@
 <?php
 
-use TECWEB\MYAPI\Products;
+require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/myapi/Products.php';
+use MYAPI\Create\Create;
 
 $post = [
     'nombre'   => $_POST['nombre']   ?? '',
@@ -14,7 +14,6 @@ $post = [
     'imagen'   => $_POST['imagen']   ?? ''
 ];
 
-$prodObj = new Products('marketzone', 'root', 'adylene');
+$prodObj = new Create('marketzone');
 $prodObj->add($post);
 echo $prodObj->getData();
-?>
