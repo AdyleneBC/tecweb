@@ -14,7 +14,7 @@ $app->get("/hola/{nombre}", function($request, $response, $args ){
 });
 
 $app->post("/pruebapost", function( $request, $response, $args){
-    $reqPost = $request->getParseBody();
+    $reqPost = $request->getParsedBody();
     $val1 = $reqPost["val1"];
     $val2 = $reqPost["val2"];
     
