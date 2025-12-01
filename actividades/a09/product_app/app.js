@@ -8,7 +8,7 @@ var baseJSON = {
     "imagen": "img/default.png"
 };
 
-//
+//Agregamos esto para cambiar o actualizar las url que nos incica el pfd del profe
 const API = "./backend";
 
 $(document).ready(function () {
