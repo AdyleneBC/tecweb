@@ -8,6 +8,9 @@ var baseJSON = {
     "imagen": "img/default.png"
 };
 
+//
+const API = "./backend";
+
 $(document).ready(function () {
     let edit = false;
 
@@ -18,7 +21,8 @@ $(document).ready(function () {
 
     function listarProductos() {
         $.ajax({
-            url: './backend/product-list.php',
+           
+            url: API + '/products',
             type: 'GET',
             success: function (response) {
                 // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
@@ -61,7 +65,8 @@ $(document).ready(function () {
         if ($('#search').val()) {
             let search = $('#search').val();
             $.ajax({
-                url: './backend/product-search.php?search=' + $('#search').val(),
+               
+                url: API + '/products/' + $('#search').val(),
                 data: { search },
                 type: 'GET',
                 success: function (response) {
@@ -119,12 +124,6 @@ $(document).ready(function () {
 
     $('#product-form').submit(e => {
         e.preventDefault();
-
-        // SE CONVIERTE EL JSON DE STRING A OBJETO
-        //let postData = JSON.parse( $('#description').val() );
-        // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
-        // postData['nombre'] = $('#name').val();
-        //postData['id'] = $('#productId').val();
 
         //////////////////////////////////////////////////
         // lo que haces aquí es que validamos con un alert la exitencia de un nombre en la bd antes de agregar
@@ -189,47 +188,78 @@ $(document).ready(function () {
             return; // detenemos el envío
         }
 
-        const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
 
-        $.post(url, postData, (response) => {
-            //console.log(response);
-            // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
-            let respuesta = JSON.parse(response);
-            // SE CREA UNA PLANTILLA PARA CREAR INFORMACIÓN DE LA BARRA DE ESTADO
-            let template_bar = '';
-            template_bar += `
+        const url = API + '/product';
+
+        if (edit === false) {
+
+            $.post(url, postData, (response) => {
+                let respuesta = JSON.parse(response);
+                let template_bar = '';
+                template_bar += `
                         <li style="list-style: none;">status: ${respuesta.status}</li>
                         <li style="list-style: none;">message: ${respuesta.message}</li>
                     `;
-            // REINICIA EL FORMULARIO (versión con inputs)
-            $('#name, #marca, #modelo, #precio, #unidades, #detalles, #imagen').val('');
-            $('#productId').val('');
 
-            // Muestra barra de estado 
-            $('#product-result').show();
-            $('#container').html(template_bar);
+                $('#name, #marca, #modelo, #precio, #unidades, #detalles, #imagen').val('');
+                $('#productId').val('');
 
-            // Vuelve a listar y salir de modo edición
-            listarProductos();
-            edit = false;
+                $('#product-result').show();
+                $('#container').html(template_bar);
 
+                listarProductos();
+                edit = false;
 
-            /***********AGREGAMOS ESTA LÍNEA PARA REGRESAR AL TEXTO ORIGINAL DESPUÉS DE MODIFICAR UN PRODUCTO****** */
-            $('button.btn-primary').text('Agregar Producto');
+                $('button.btn-primary').text('Agregar Producto');
+            });
 
-        });
+        } else {
+
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: postData,
+                success: function (response) {
+                    let respuesta = JSON.parse(response);
+                    let template_bar = '';
+                    template_bar += `
+                        <li style="list-style: none;">status: ${respuesta.status}</li>
+                        <li style="list-style: none;">message: ${respuesta.message}</li>
+                    `;
+
+                    $('#name, #marca, #modelo, #precio, #unidades, #detalles, #imagen').val('');
+                    $('#productId').val('');
+
+                    $('#product-result').show();
+                    $('#container').html(template_bar);
+
+                    listarProductos();
+                    edit = false;
+
+                    $('button.btn-primary').text('Agregar Producto');
+                }
+            });
+        }
     });
 
     $(document).on('click', '.product-delete', (e) => {
         if (confirm('¿Realmente deseas eliminar el producto?')) {
             const element = $(this)[0].activeElement.parentElement.parentElement;
             const id = $(element).attr('productId');
-            $.post('./backend/product-delete.php', { id }, (response) => {
-                $('#product-result').hide();
-                listarProductos();
+
+
+            $.ajax({
+                url: API + '/product',
+                type: 'DELETE',
+                data: { id },
+                success: function (response) {
+                    $('#product-result').hide();
+                    listarProductos();
+                }
             });
         }
     });
+
 ////////////MODIFICADO PARA AUTO LLENAR CAMPOS AL MODIFICAR
     $(document).on('click', '.product-item', (e) => {
         $(document).on('click', '.product-item', function (e) {
@@ -240,26 +270,31 @@ $(document).ready(function () {
             const id = $row.attr('productId');
 
             // 2) Pedir datos al backend
-            $.post('./backend/product-single.php', { id }, (response) => {
-                let data;
-                try { data = JSON.parse(response); } catch (err) { data = {}; }
 
-                // 3) Soportar objeto o arreglo con un objeto
-                const product = Array.isArray(data) ? (data[0] || {}) : data;
+            $.ajax({
+                url: API + '/product/' + id,
+                type: 'GET',
+                success: function (response) {
+                    let data;
+                    try { data = JSON.parse(response); } catch (err) { data = {}; }
 
-                // 4) Rellenar los campos
-                $('#name').val(product.nombre || '');
-                $('#productId').val(product.id || '');
-                $('#marca').val(product.marca || '');
-                $('#modelo').val(product.modelo || '');
-                $('#precio').val(product.precio || '');
-                $('#unidades').val(product.unidades || '');
-                $('#detalles').val(product.detalles || '');
-                $('#imagen').val(product.imagen || '');
+                    // 3) Soportar objeto o arreglo con un objeto
+                    const product = Array.isArray(data) ? (data[0] || {}) : data;
 
-                // 5) Modo edición
-                edit = true;
-                $('button.btn-primary').text('Modificar Producto');
+                    // 4) Rellenar los campos
+                    $('#name').val(product.nombre || '');
+                    $('#productId').val(product.id || '');
+                    $('#marca').val(product.marca || '');
+                    $('#modelo').val(product.modelo || '');
+                    $('#precio').val(product.precio || '');
+                    $('#unidades').val(product.unidades || '');
+                    $('#detalles').val(product.detalles || '');
+                    $('#imagen').val(product.imagen || '');
+
+                    // 5) Modo edición
+                    edit = true;
+                    $('button.btn-primary').text('Modificar Producto');
+                }
             });
         });
 
@@ -336,11 +371,9 @@ $(document).ready(function () {
 
         clearTimeout(timerNombre);
         timerNombre = setTimeout(function () {
-            // Usa el buscador que ya exite product-search.php?search=
             $.ajax({
-                url: './backend/product-search.php',
+                url: API + '/products/' + nombre,
                 type: 'GET',
-                data: { search: nombre }, // el endpoint ya acepta ?search=
                 success: function (resp) {
                     let arr = [];
                     try { arr = JSON.parse(resp) || []; } catch (e) { }
