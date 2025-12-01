@@ -7,9 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'MYAPI\\Create\\Create' => $baseDir . '/backend/myapi/Create/Create.php',
-    'MYAPI\\DataBase' => $baseDir . '/backend/myapi/DataBase.php',
-    'MYAPI\\Delete\\Delete' => $baseDir . '/backend/myapi/Delete/Delete.php',
-    'MYAPI\\Read\\Read' => $baseDir . '/backend/myapi/Read/Read.php',
-    'MYAPI\\Update\\Update' => $baseDir . '/backend/myapi/Update/Update.php',
 );
