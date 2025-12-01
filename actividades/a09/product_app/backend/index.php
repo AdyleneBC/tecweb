@@ -52,40 +52,47 @@ $app->get('/products/{search}', function (Request $request, Response $response, 
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-// POST /product -> agregar
+// POST /product
 $app->post('/product', function (Request $request, Response $response) {
     $params = (array)$request->getParsedBody();
 
-    $create = new Create("marketzone");
-    $create->add((object)$params);
+    // usar tu clase real
+    $create = new \MYAPI\Create\Create('marketzone');
+    $create->add($params);
 
-    $resp = ["status"=>"success", "message"=>"Producto agregado"];
-    $response->getBody()->write(json_encode($resp));
+    // devolver lo que tu clase guardó en $this->data
+    $resp = $create->getData();
+
+    $response->getBody()->write($resp);
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-// PUT /product -> editar
+
+// PUT /product
 $app->put('/product', function (Request $request, Response $response) {
     $params = (array)$request->getParsedBody();
 
-    $update = new Update("marketzone");
-    $update->edit((object)$params);
+    $update = new \MYAPI\Update\Update('marketzone');
+    $update->edit($params);
 
-    $resp = ["status"=>"success", "message"=>"Producto actualizado"];
-    $response->getBody()->write(json_encode($resp));
+    $resp = $update->getData();
+    $response->getBody()->write($resp);
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-// DELETE /product -> borrar
+
+// DELETE /product
 $app->delete('/product', function (Request $request, Response $response) {
     $params = (array)$request->getParsedBody();
+    $id = $params['id'] ?? 0;
 
-    $delete = new Delete("marketzone");
-    $delete->delete($params['id']);
+    $delete = new \MYAPI\Delete\Delete('marketzone');
+    $delete->delete($id);
 
-    $resp = ["status"=>"success", "message"=>"Producto eliminado"];
-    $response->getBody()->write(json_encode($resp));
+    $resp = $delete->getData();
+    $response->getBody()->write($resp);
     return $response->withHeader('Content-Type', 'application/json');
 });
+
 
 $app->run();
